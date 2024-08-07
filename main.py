@@ -6,14 +6,15 @@ import torch.nn.functional as F
 from torchsummary import summary as summary
 from SystemModel import SysMod
 from Data import generate_dataset
+from create_data import *
 if __name__ == "__main__":
-    start_time = time.time()
+
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-num_ap', "--number_AP", type=int, default=40, help="Number of Access Point.")
+    parser.add_argument('-num_ap', "--number_AP", type=int, default=60, help="Number of Access Point.")
     parser.add_argument('-num_ue', "--number_UE", type=int, default=30, help="Number of User Equipment.")
     parser.add_argument('-tau_p', "--pilot_length", type=int, default=10, help="Number of pilot sequences.") #Also the number of pilot = tau_p
-    parser.add_argument('-length', "--area_length", type=int, default=1, help="Area length, from -1 to 1.")
+    parser.add_argument('-length', "--area_length", type=int, default=1000, help="Area length, from -1 to 1.")
     parser.add_argument('-f', "--frequency", type=int, default=1900, help="Frequency 1900 MHz.")
     parser.add_argument('-B', "--bandwidth", type=int, default=20e6, help="Frequency 20 MHz.")
     parser.add_argument('-h_ap', "--height_AP", type=float, default=15, help="Height of Access Point (in km).")
@@ -24,13 +25,13 @@ if __name__ == "__main__":
     parser.add_argument('-d0', "--distance0", type=float, default=0.01, help="Distance range number 0")
 
     # parser.add_argument('-dev', "--device", type=str, default="cuda", choices=["cpu", "cuda"])
-    parser.add_argument('-num_train', "--training_sample", type=int, default=5120, help="Number of training samples.")
+    parser.add_argument('-num_train', "--training_sample", type=int, default=1280, help="Number of training samples.")
     parser.add_argument('-num_valid', "--validating_sample", type=int, default=0, help="Number of validating samples.")
-    parser.add_argument('-num_test', "--testing_sample", type=int, default=1280, help="Number of testing samples.")
+    parser.add_argument('-num_test', "--testing_sample", type=int, default=0, help="Number of testing samples.")
     parser.add_argument('-batch', "--batch_size", type=int, default=64, help="Size of batch data")
 
     args = parser.parse_args()
-    system = SysMod(args)
+
     '''
     Generate dataset as csv file, so next time I can easily use it
     The structure of data set is like
@@ -42,33 +43,96 @@ if __name__ == "__main__":
     |          |          |                                  |                                |
     |          |          |                                  |                                |
     |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
-    |          |          |                                  |                                |
     -------------------------------------------------------------------------------------------
     '''
-    generate_dataset(args, system)
+    system = SysMod(args)
+    start_time = time.time()
+    generate_dataset_new(num_ue = 20, num_ap = 40, tau_p = 5)
     end_time = time.time()
     running_time = end_time - start_time
-    print(f'Done generating data after{running_time: .6f} seconds')
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue = 20, num_ap = 40, tau_p = 10)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue = 20, num_ap = 40, tau_p = 15)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue = 20, num_ap = 60, tau_p = 5)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue=20, num_ap=60, tau_p=10)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue=20, num_ap=60, tau_p=15)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue=30, num_ap=40, tau_p=5)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue=30, num_ap=40, tau_p=10)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue=30, num_ap=40, tau_p=15)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue=30, num_ap=40, tau_p=20)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue=30, num_ap=60, tau_p=5)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue=30, num_ap=60, tau_p=10)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue=30, num_ap=60, tau_p=15)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+    start_time = time.time()
+    generate_dataset_new(num_ue=30, num_ap=60, tau_p=20)
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f'Done generating data after{running_time: .2f} seconds')
+
+
+    #add another metric that compute the channel-estimation error to show that pilot assignment help channel estimation process
+
 
 
 

@@ -60,7 +60,7 @@ class SysMod():
                 c[m, k] = numerator / denominator
         return c
 
-    def sinr_calculator(self, pilot_index, beta, gamma, c_mk):
+    def sinr_calculator(self, pilot_index, beta, gamma):
         sinr = np.zeros(self.num_ue)
         for k in range(self.num_ue):
             # DS_k
