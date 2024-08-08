@@ -130,7 +130,7 @@ def sinr_calculator(pilot_index, beta, gamma):
     etaa = 1/(np.sum(gamma, axis=1))
     eta = np.tile(etaa[:, np.newaxis], (1, num_ue))
     # sinr = np.zeros_like(pilot_index)
-    DS = rho_d * (np.sum(np.sqrt(eta[:, np.newaxis]) * gamma, axis=0)) ** 2 #( K,)
+    DS = rho_d * (np.sum(np.sqrt(eta) * gamma, axis=0)) ** 2 #( K,)
 
     #BU
     eta_gamma = eta * gamma
@@ -144,10 +144,14 @@ def sinr_calculator(pilot_index, beta, gamma):
     for k in range(num_ue):
         # Create a mask for valid j values where j != k
         mask = np.arange(num_ue) != k
-        sum_squared = np.sum(
-            ((np.sum(np.sqrt(eta[:, np.newaxis]) * gamma[:, mask] * (beta[:, k][:, np.newaxis] / beta[:, mask]), axis=0)) ** 2) *
-            flag[k, mask]
-        )
+        # sum_squared = np.sum(
+        #     (
+        #             (np.sum(np.sqrt(eta[:, np.newaxis]) * gamma[:, mask] * (beta[:, k][:, np.newaxis] / beta[:, mask]), axis=0)) ** 2) *
+        #     flag[k, mask]
+        # )
+        sum_squared = np.sum(((np.sum(
+            np.sqrt(eta[:, mask]) * gamma[:, mask] * (beta[:, k][:, np.newaxis] / beta[:, mask]), axis=0)) ** 2) * flag[
+                                 k, mask])
         UI[k] = rho_d*sum_squared
 
         # sum_inner = np.sum(eta[:, np.newaxis] * gamma * beta[:, k][:, np.newaxis], axis=0)
@@ -175,6 +179,7 @@ def greedy_assignment(beta, tau_p, N = 20):
                 for k in range(num_ue):
                     if (k!= k_star) and (pilot_index[k]==tau):
                         sum_beta[tau] += beta[m,k]
+
         pilot_index[k_star] = np.argmin(sum_beta)
 
     rate_list = dl_rate_calculator(pilot_index, beta, tau_p)
