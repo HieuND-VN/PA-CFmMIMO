@@ -127,13 +127,19 @@ def c_calculator(pilot_index, beta, tau_p):
 
 def sinr_calculator(pilot_index, beta, gamma):
     num_ap, num_ue = beta.shape
-    eta = 1/(np.sum(gamma, axis=1))
-    sinr = np.zeros_like(pilot_index)
+    etaa = 1/(np.sum(gamma, axis=1))
+    eta = np.tile(etaa[:, np.newaxis], (1, num_ue))
+    # sinr = np.zeros_like(pilot_index)
     DS = rho_d * (np.sum(np.sqrt(eta[:, np.newaxis]) * gamma, axis=0)) ** 2 #( K,)
+
+    #BU
+    eta_gamma = eta * gamma
+    product = np.sum(eta_gamma[:, :, np.newaxis] * beta[:, np.newaxis, :], axis=0)
+    BU = np.sum(product, axis=0)
+
 
     # UI
     UI = np.zeros(num_ue)
-    BU = np.zeros(num_ue)
     flag = (pilot_index[:, np.newaxis] == pilot_index).astype(float)
     for k in range(num_ue):
         # Create a mask for valid j values where j != k
@@ -144,10 +150,10 @@ def sinr_calculator(pilot_index, beta, gamma):
         )
         UI[k] = rho_d*sum_squared
 
-        sum_inner = np.sum(eta[:, np.newaxis] * gamma * beta[:, k][:, np.newaxis], axis=0)
-        BU[k] = rho_d*np.sum(sum_inner)
+        # sum_inner = np.sum(eta[:, np.newaxis] * gamma * beta[:, k][:, np.newaxis], axis=0)
+        # BU[k] = rho_d*np.sum(sum_inner)
 
-    return DS / (UI+BU+1)
+    return (DS / (UI+BU+1))
 def dl_rate_calculator(pilot_index, beta, tau_p):
     c_mk = c_calculator(pilot_index, beta, tau_p)
     gamma = np.sqrt(tau_p*rho_p)*beta*c_mk
