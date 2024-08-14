@@ -40,16 +40,20 @@ def import_from_files(args):
 def dataloader_creation(args):
     data = import_from_files(args)
     data = np.array(data)
-    train_data = data[:8, :]
-    test_data = data[8:4+8, :]
+    train_data = data[:1024, :]
+    test_data = data[1024:, :]
     sum_dl_rate = data[:, 0]
     mean_dl_rate = np.mean(sum_dl_rate)
     min_rate_list = data[:, 1]
     mean_min_list = np.mean(min_rate_list)
-    max_rate_list = data[:, 1]
+    max_rate_list = data[:, 2]
     mean_max_list = np.mean(max_rate_list)
-    x_train = train_data[:, 3: args.number_AP * args.number_UE + 3]
-    x_test = test_data[:, 3: args.number_AP * args.number_UE + 3]
+    x_train = train_data[:, 2: args.number_AP * args.number_UE + 2]
+    min_train = np.min(x_train,axis = 1)
+    max_train = np.max(x_train, axis=1)
+    x_test = test_data[:, 2: args.number_AP * args.number_UE + 2]
+    min_test = np.min(x_test,axis = 1)
+    max_test = np.max(x_test, axis=1)
     X_train = torch.tensor(x_train, dtype=torch.float32)
     X_test = torch.tensor(x_test, dtype=torch.float32)
 
@@ -64,7 +68,7 @@ def dataloader_creation(args):
     test_dataset = list(X_test)
     train_dataloader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, drop_last=True)
     test_dataloader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=True, drop_last=True)
-    return mean_dl_rate, mean_min_list, mean_max_list, train_dataloader, test_dataloader
+    return mean_dl_rate, mean_min_list, mean_max_list, min_train, max_train, min_test, max_test, train_dataloader, test_dataloader
 
 
 # Define model
